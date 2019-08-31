@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:bluetooth="clr-namespace:BLEPrototype.BluetoothLE"
+             x:Class="BLEPrototype.MainPage">
+
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu">
+            <TableView Intent="Menu">
+                <TableRoot>
+                    <TableSection>
+                        <TextCell Text="About" Command="{Binding NavigateCommand}" CommandParameter="Nav/About" />
+                    </TableSection>
+                    <TableSection>
+                        <TextCell Text="BluetoothLE Scan/Connect" Command="{Binding NavigateCommand}" CommandParameter="Nav/BleCentral" />
+                    </TableSection>
+                </TableRoot>
+            </TableView>
+        </ContentPage>
+    </MasterDetailPage.Master>
+</MasterDetailPage>
