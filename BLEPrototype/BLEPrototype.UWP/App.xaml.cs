@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BLEPrototype.Startup;
+using Shiny;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,6 +32,7 @@ namespace BLEPrototype.UWP
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            UwpShinyHost.Init(new BLEStartup());
         }
 
         /// <summary>
@@ -39,8 +42,7 @@ namespace BLEPrototype.UWP
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-
-
+            
             Frame rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,

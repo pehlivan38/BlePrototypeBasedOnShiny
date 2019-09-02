@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="BLEPrototype.AboutPage">
+             x:Class="BLEPrototype.BluetoothLE.PeripheralPage">
+    
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Prototype project to connect/scan blurtooth devices"
+            <Label Text="Peripheral page"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
         </StackLayout>
     </ContentPage.Content>
+
 </ContentPage>

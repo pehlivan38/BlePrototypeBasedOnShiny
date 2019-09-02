@@ -33,6 +33,7 @@ namespace BLEPrototype
             containerRegistry.RegisterForNavigation<AboutPage>("About");
 
             containerRegistry.RegisterForNavigation<AdapterPage>("BleCentral");
+            containerRegistry.RegisterForNavigation<PeripheralPage>("Peripheral");
         }
     }
 }
