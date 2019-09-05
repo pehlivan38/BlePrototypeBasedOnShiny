@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
+using Xamarin.Forms;
+using Prism.Navigation;
 
 namespace BLEPrototype.BluetoothLE
 {
@@ -16,18 +18,26 @@ namespace BLEPrototype.BluetoothLE
 
         public string HelloString => "This page is to manage your BLE connections";
 
+        readonly INavigationService _navigator;
         readonly ICentralManager _centralManager;
         IDisposable _scan;
 
         public DelegateCommand OpenSettingsCommand { get; }
         public DelegateCommand ScanToggleCommand { get;  }
 
-        public AdapterViewModel(ICentralManager central)
+        public DelegateCommand<PeripheralItemViewModel> SelectPeripheralCommand { get;  }
+
+        public AdapterViewModel(ICentralManager central, INavigationService navigator)
         {
             _centralManager = central;
+            _navigator = navigator;
             OpenSettingsCommand = new DelegateCommand(OpenSettings);
             ScanToggleCommand = new DelegateCommand(ScanToggle);
+
+            SelectPeripheralCommand = new DelegateCommand<PeripheralItemViewModel>(SelectPeripheral);
         }
+
+        
 
         #region peripheral operations
         public ObservableList<PeripheralItemViewModel> Peripherals { get; } = new ObservableList<PeripheralItemViewModel>();
@@ -68,26 +78,31 @@ namespace BLEPrototype.BluetoothLE
                     .Subscribe(
                         results =>
                         {
-                            var list = new List<PeripheralItemViewModel>();
-                            foreach (var result in results)
+                            Device.BeginInvokeOnMainThread(() =>
                             {
-                                var peripheral = this.Peripherals.FirstOrDefault(x => x.Equals(result.Peripheral));
-                                if (peripheral == null)
-                                    peripheral = list.FirstOrDefault(x => x.Equals(result.Peripheral));
-
-                                if (peripheral != null)
-                                    peripheral.Update(result);
-                                else
+                                
+                                var list = new List<PeripheralItemViewModel>();
+                                foreach (var result in results)
                                 {
-                                    peripheral = new PeripheralItemViewModel(result.Peripheral);
-                                    peripheral.Update(result);
-                                    list.Add(peripheral);
-                                }
-                            }
-                            if (list.Any())
-                                this.Peripherals.AddRange(list);
+                                    var peripheral = this.Peripherals.FirstOrDefault(x => x.Equals(result.Peripheral));
+                                    if (peripheral == null)
+                                        peripheral = list.FirstOrDefault(x => x.Equals(result.Peripheral));
 
-                            RaisePropertyChanged(nameof(Peripherals));
+                                    if (peripheral != null)
+                                        peripheral.Update(result);
+                                    else
+                                    {
+                                        peripheral = new PeripheralItemViewModel(result.Peripheral);
+                                        peripheral.Update(result);
+                                        list.Add(peripheral);
+                                    }
+                                }
+                                if (list.Any())
+                                    this.Peripherals.AddRange(list);
+                            
+                                RaisePropertyChanged(nameof(Peripherals));
+                            });
+                            
                         },
                         ex => Console.WriteLine("ERROR: " + ex.ToString())
                     );
@@ -95,8 +110,18 @@ namespace BLEPrototype.BluetoothLE
                 this.IsScanning = true;
                 
             }
+            RaisePropertyChanged(nameof(Peripherals));
             RaisePropertyChanged(nameof(IsScanning));
         }
 
+        private async void SelectPeripheral(PeripheralItemViewModel item)
+        {
+            var p = new NavigationParameters();
+            p.Add("Peripheral", item.Peripheral);
+
+            var result = await _navigator.NavigateAsync("Peripheral", p);
+            if (!result.Success)
+                Console.WriteLine("[NAV FAIL] " + result.Exception);
+        }
     }
 }

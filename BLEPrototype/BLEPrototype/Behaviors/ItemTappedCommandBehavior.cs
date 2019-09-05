@@ -32,11 +32,11 @@ namespace BLEPrototype.Behaviors
 
         void OnItemTapped(object sender, ItemTappedEventArgs e)
         {
-            if (this.Command == null || e.Item == null)
+            if (this.Command == null || e.Group == null)
                 return;
 
-            if (this.Command.CanExecute(e.Item))
-                this.Command.Execute(e.Item);
+            if (this.Command.CanExecute(e.Group))
+                this.Command.Execute(e.Group);
         }
     }
 }

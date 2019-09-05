@@ -26,9 +26,9 @@
                 </Button.Triggers>
             </Button>
             
-            <ListView ItemsSource="{Binding Peripherals}" RowHeight="160">
+            <ListView ItemsSource="{Binding Peripherals}" RowHeight="160" Margin="20, 0">
                 <ListView.Behaviors>
-                    <behaviors:ItemTappedCommandBehavior Command="{Binding SelectPeripheral}" />
+                    <behaviors:ItemTappedCommandBehavior Command="{Binding SelectPeripheralCommand}" />
                 </ListView.Behaviors>
 
                 <ListView.ItemTemplate>
