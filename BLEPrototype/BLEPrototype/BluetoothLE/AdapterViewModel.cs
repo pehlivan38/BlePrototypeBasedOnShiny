@@ -10,6 +10,11 @@ using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using Xamarin.Forms;
 using Prism.Navigation;
+using System.Reactive.Concurrency;
+using System.Threading;
+using System.Threading.Tasks;
+using Xam.Reactive.Concurrency;
+using BLEPrototype.Extensions;
 
 namespace BLEPrototype.BluetoothLE
 {
@@ -32,15 +37,15 @@ namespace BLEPrototype.BluetoothLE
             _centralManager = central;
             _navigator = navigator;
             OpenSettingsCommand = new DelegateCommand(OpenSettings);
-            ScanToggleCommand = new DelegateCommand(ScanToggle);
+            ScanToggleCommand = new DelegateCommand(ScanToggleAsync);
+
+            Peripherals = new ObservableList<PeripheralItemViewModel>();
 
             SelectPeripheralCommand = new DelegateCommand<PeripheralItemViewModel>(SelectPeripheral);
         }
 
-        
-
         #region peripheral operations
-        public ObservableList<PeripheralItemViewModel> Peripherals { get; } = new ObservableList<PeripheralItemViewModel>();
+        public ObservableList<PeripheralItemViewModel> Peripherals { get; set; }
 
         #endregion
 
@@ -60,7 +65,7 @@ namespace BLEPrototype.BluetoothLE
         }
 
         public bool IsScanning { get; private set; }
-        private void ScanToggle()
+        private void ScanToggleAsync()
         {
             if (this.IsScanning)
             {
@@ -75,37 +80,34 @@ namespace BLEPrototype.BluetoothLE
                     .Scan()
                     .Buffer(TimeSpan.FromSeconds(1))
                     .Synchronize()
+                    .ObserveOn(XamarinDispatcherScheduler.Current)
                     .Subscribe(
                         results =>
                         {
-                            Device.BeginInvokeOnMainThread(() =>
+                            var list = new List<PeripheralItemViewModel>();
+                            foreach (var result in results)
                             {
-                                
-                                var list = new List<PeripheralItemViewModel>();
-                                foreach (var result in results)
-                                {
-                                    var peripheral = this.Peripherals.FirstOrDefault(x => x.Equals(result.Peripheral));
-                                    if (peripheral == null)
-                                        peripheral = list.FirstOrDefault(x => x.Equals(result.Peripheral));
+                                var peripheral = this.Peripherals.FirstOrDefault(x => x.Equals(result.Peripheral));
+                                if (peripheral == null)
+                                    peripheral = list.FirstOrDefault(x => x.Equals(result.Peripheral));
 
-                                    if (peripheral != null)
-                                        peripheral.Update(result);
-                                    else
-                                    {
-                                        peripheral = new PeripheralItemViewModel(result.Peripheral);
-                                        peripheral.Update(result);
-                                        list.Add(peripheral);
-                                    }
+                                if (peripheral != null)
+                                    peripheral.Update(result);
+                                else
+                                {
+                                    peripheral = new PeripheralItemViewModel(result.Peripheral);
+                                    peripheral.Update(result);
+                                    list.Add(peripheral);
                                 }
-                                if (list.Any())
-                                    this.Peripherals.AddRange(list);
-                            
-                                RaisePropertyChanged(nameof(Peripherals));
-                            });
-                            
+                            }
+                            if (list.Any())
+                                this.Peripherals.AddRange(list);
+
+                            RaisePropertyChanged(nameof(Peripherals));
                         },
                         ex => Console.WriteLine("ERROR: " + ex.ToString())
-                    );
+                    )
+                    .DisposeWith(this.DeactivateWith);
 
                 this.IsScanning = true;
                 
