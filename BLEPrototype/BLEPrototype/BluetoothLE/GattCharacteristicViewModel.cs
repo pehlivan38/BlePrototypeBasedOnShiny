@@ -2,6 +2,7 @@
 using Shiny.BluetoothLE.Central;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace BLEPrototype.BluetoothLE
@@ -26,5 +27,55 @@ namespace BLEPrototype.BluetoothLE
         {
             this.Characteristic = characteristic;
         }
+
+        public void Select()
+        {
+            Stopwatch s = new Stopwatch();
+            s.Start();
+            while (s.Elapsed < TimeSpan.FromSeconds(1))
+            {
+                DoRead();
+            }
+
+            s.Stop();
+            return;
+        }
+
+        async void DoRead()
+        {
+            //var utf8 = await this.dialogs.Confirm(
+            //    "Display Value as UTF8 or HEX?",
+            //    okText: "UTF8",
+            //    cancelText: "HEX"
+            //);
+            this.Characteristic
+                .Read()
+                //.Timeout(TimeSpan.FromSeconds(2))
+                .Subscribe(
+                    x => this.SetReadValue(x, true),
+                    ex => Console.WriteLine("ERROR: " + ex.ToString())
+                );
+
+        }
+
+        void SetReadValue(CharacteristicGattResult result, bool fromUtf8) => Xamarin.Forms.Device.BeginInvokeOnMainThread(() =>
+        {
+            this.IsValueAvailable = true;
+            this.LastValue = DateTime.Now;
+
+            if (result.Data == null)
+                this.Value = "EMPTY";
+
+            else
+                this.Value = result.Data[0].ToString();
+
+            RaisePropertyChanged(nameof(IsValueAvailable));
+            RaisePropertyChanged(nameof(LastValue));
+            RaisePropertyChanged(nameof(Value));
+
+            //fromUtf8
+            //    ? Encoding.UTF8.GetString(result.Data, 0, result.Data.Length)
+            //    : BitConverter.ToString(result.Data);
+        });
     }
 }

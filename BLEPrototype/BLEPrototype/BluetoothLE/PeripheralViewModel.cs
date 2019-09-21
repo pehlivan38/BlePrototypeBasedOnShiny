@@ -29,11 +29,21 @@ namespace BLEPrototype.BluetoothLE
         public DelegateCommand PairToDeviceCommand { get; }
         public DelegateCommand ConnectionToggleCommand { get; }
 
+        public DelegateCommand<GattCharacteristicViewModel> SelectCharacteristicsCommand { get; }
+
         public PeripheralViewModel(ICentralManager centralManager)
         {
             _centralManager = centralManager;
             PairToDeviceCommand = new DelegateCommand(PairToDevice);
             ConnectionToggleCommand = new DelegateCommand(ConnectionToggle);
+
+            SelectCharacteristicsCommand = new DelegateCommand<GattCharacteristicViewModel>(ReadCharacteristics);
+
+        }
+
+        private void ReadCharacteristics(GattCharacteristicViewModel characteristics)
+        {
+            characteristics.Select();
         }
 
         private void ConnectionToggle()

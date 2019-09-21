@@ -35,8 +35,16 @@ namespace BLEPrototype.Behaviors
             if (this.Command == null || e.Group == null)
                 return;
 
-            if (this.Command.CanExecute(e.Group))
-                this.Command.Execute(e.Group);
+            if (e.Item == null)
+            {
+                if (this.Command.CanExecute(e.Group))
+                    this.Command.Execute(e.Group);
+            }
+            else
+            {
+                if (this.Command.CanExecute(e.Item))
+                    this.Command.Execute(e.Item);
+            }
         }
     }
 }

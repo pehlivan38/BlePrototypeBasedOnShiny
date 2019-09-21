@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BLEPrototype.Extensions
 {
-    public static class BLEExtensionsgey
+    public static class BLEExtensions
     {
 
         public static T DisposeWith<T>(this T item, CompositeDisposable compositeDisposable) 

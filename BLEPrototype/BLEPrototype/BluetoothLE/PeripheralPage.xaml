@@ -11,13 +11,13 @@
             <Button Text="{Binding ConnectText}"
                     Command="{Binding ConnectionToggleCommand}" />
 
-            <Button Text="Request MTU"
+            <!--<Button Text="Request MTU"
                     Command="{Binding RequestMtu}"
                     IsVisible="{Binding IsMtuVisible}"/>
 
             <Button Text="{Binding PairingText}"
                     Command="{Binding PairToDeviceCommand}"
-                    IsVisible="{Binding IsPairingVisible}"/>
+                    IsVisible="{Binding IsPairingVisible}"/>-->
 
             <Label Text="{Binding Rssi, StringFormat='RSSI: {0}'}" />
 
@@ -26,7 +26,7 @@
                       IsGroupingEnabled="true">
 
                 <ListView.Behaviors>
-                    <behaviors:ItemTappedCommandBehavior Command="{Binding SelectCharacteristic}" />
+                    <behaviors:ItemTappedCommandBehavior Command="{Binding SelectCharacteristicsCommand}" />
                 </ListView.Behaviors>
 
                 <ListView.GroupHeaderTemplate>

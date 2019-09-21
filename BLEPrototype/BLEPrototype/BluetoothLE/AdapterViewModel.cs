@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xam.Reactive.Concurrency;
 using BLEPrototype.Extensions;
+using System.Diagnostics;
 
 namespace BLEPrototype.BluetoothLE
 {
@@ -75,6 +76,7 @@ namespace BLEPrototype.BluetoothLE
             else
             {
                 this.Peripherals.Clear();
+                Debug.WriteLine("View" + Thread.CurrentThread.ManagedThreadId);
 
                 this._scan = _centralManager
                     .Scan()
@@ -84,6 +86,8 @@ namespace BLEPrototype.BluetoothLE
                     .Subscribe(
                         results =>
                         {
+                            Debug.WriteLine("within: " + Thread.CurrentThread.ManagedThreadId);
+
                             var list = new List<PeripheralItemViewModel>();
                             foreach (var result in results)
                             {
