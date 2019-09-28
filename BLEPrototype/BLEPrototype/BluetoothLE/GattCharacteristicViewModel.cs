@@ -3,13 +3,16 @@ using Shiny.BluetoothLE.Central;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reactive.Linq;
 using System.Text;
+using Xam.Reactive.Concurrency;
 
 namespace BLEPrototype.BluetoothLE
 {
     public class GattCharacteristicViewModel : BLEViewModel
     {
 
+        IDisposable watcher;
         public IGattCharacteristic Characteristic { get; }
 
 
@@ -30,15 +33,47 @@ namespace BLEPrototype.BluetoothLE
 
         public void Select()
         {
-            Stopwatch s = new Stopwatch();
-            s.Start();
-            while (s.Elapsed < TimeSpan.FromSeconds(1))
-            {
-                DoRead();
-            }
 
-            s.Stop();
+            ToggleNotify();
+
             return;
+
+            //Stopwatch s = new Stopwatch();
+            //s.Start();
+            //while (s.Elapsed < TimeSpan.FromSeconds(1))
+            //{
+            //    DoRead();
+            //}
+
+            //s.Stop();
+            //return;
+        }
+
+
+        async void ToggleNotify()
+        {
+            if (this.Characteristic.IsNotifying)
+            {
+                this.watcher?.Dispose();
+                this.IsNotifying = false;
+            }
+            else
+            {
+                this.IsNotifying = true;
+                //var utf8 = await this.dialogs.Confirm(
+                //    "Display Value as UTF8 or HEX?",
+                //    okText: "UTF8",
+                //    cancelText: "HEX"
+                //);
+                this.watcher = this.Characteristic
+                    .RegisterAndNotify()
+                    .ObserveOn(XamarinDispatcherScheduler.Current)
+                    .Subscribe(
+                        x => this.SetReadValue(x, true),
+                        ex => Console.WriteLine("ERROR: " + ex.ToString())
+                    );
+            }
+            RaisePropertyChanged(nameof(IsNotifying));
         }
 
         async void DoRead()
