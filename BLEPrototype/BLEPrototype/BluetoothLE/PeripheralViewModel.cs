@@ -127,7 +127,6 @@ namespace BLEPrototype.BluetoothLE
                                 }
                                 catch (Exception ex)
                                 {
-                                    // eat this for now
                                     Console.WriteLine(ex);
                                 }
 
