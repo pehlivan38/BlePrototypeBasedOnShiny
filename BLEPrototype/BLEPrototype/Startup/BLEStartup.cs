@@ -15,8 +15,7 @@ namespace BLEPrototype.Startup
 
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.RegisterBleAdapterState<BleDelegates>();
-            services.UseBleCentral();
+            services.UseBleCentral<BleCentralDelegate>();
         }
 
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)

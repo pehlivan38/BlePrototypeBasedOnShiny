@@ -52,17 +52,17 @@ namespace BLEPrototype.BluetoothLE
 
         private void OpenSettings()
         {
-            var settings = _centralManager as ICanOpenAdapterSettings;
-            try
-            {
-                settings.OpenSettings();
-            } // I keep getting 
-            catch(InvalidOperationException e)
-            {
-                // I keep getting WinRT information: A method was called at an unexpected time. Shiny.BluetoothLE.dll
-                // exception - and I do not have any idea why - but it is ok to continue.
-                Console.WriteLine(e.Message);
-            }
+            //var settings = _centralManager as ICanOpenAdapterSettings;
+            //try
+            //{
+            //    settings.OpenSettings();
+            //} // I keep getting 
+            //catch(InvalidOperationException e)
+            //{
+            //    // I keep getting WinRT information: A method was called at an unexpected time. Shiny.BluetoothLE.dll
+            //    // exception - and I do not have any idea why - but it is ok to continue.
+            //    Console.WriteLine(e.Message);
+            //}
         }
 
         public bool IsScanning { get; private set; }
@@ -82,7 +82,7 @@ namespace BLEPrototype.BluetoothLE
                     .Scan()
                     .Buffer(TimeSpan.FromSeconds(1))
                     .Synchronize()
-                    .ObserveOn(XamarinDispatcherScheduler.Current)
+                    //.ObserveOn(XamarinDispatcherScheduler.Current)
                     .Subscribe(
                         results =>
                         {
