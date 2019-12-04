@@ -14,6 +14,9 @@
                     <TableSection>
                         <TextCell Text="BluetoothLE Scan/Connect" Command="{Binding NavigateCommand}" CommandParameter="Nav/BleCentral" />
                     </TableSection>
+                    <TableSection>
+                        <TextCell Text="Sqlite Exercise" Command="{Binding NavigateCommand}" CommandParameter="Nav/SqliteExercise" />
+                    </TableSection>
                 </TableRoot>
             </TableView>
         </ContentPage>

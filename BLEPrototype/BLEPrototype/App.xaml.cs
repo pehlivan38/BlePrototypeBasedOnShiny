@@ -6,6 +6,7 @@ using Xamarin.Forms.Xaml;
 using Prism.Unity.Extensions;
 using Prism.Mvvm;
 using BLEPrototype.BluetoothLE;
+using BLEPrototype.SqliteExercise;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace BLEPrototype
@@ -31,6 +32,8 @@ namespace BLEPrototype
             containerRegistry.RegisterForNavigation<NavigationPage>("Nav");
             containerRegistry.RegisterForNavigation<MainPage>("Main");
             containerRegistry.RegisterForNavigation<AboutPage>("About");
+
+            containerRegistry.RegisterForNavigation<DataPage>("SqliteExercise");
 
             containerRegistry.RegisterForNavigation<AdapterPage>("BleCentral");
             containerRegistry.RegisterForNavigation<PeripheralPage>("Peripheral");
