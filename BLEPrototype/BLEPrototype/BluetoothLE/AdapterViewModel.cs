@@ -82,11 +82,11 @@ namespace BLEPrototype.BluetoothLE
                     .Scan()
                     .Buffer(TimeSpan.FromSeconds(1))
                     .Synchronize()
-                    //.ObserveOn(XamarinDispatcherScheduler.Current)
+                    .ObserveOn(XamarinDispatcherScheduler.Current)
                     .Subscribe(
                         results =>
                         {
-                            Debug.WriteLine("within: " + Thread.CurrentThread.ManagedThreadId);
+                            //Debug.WriteLine("within: " + Thread.CurrentThread.ManagedThreadId);
 
                             var list = new List<PeripheralItemViewModel>();
                             foreach (var result in results)
@@ -104,8 +104,8 @@ namespace BLEPrototype.BluetoothLE
                                     list.Add(peripheral);
                                 }
                             }
-                            if (list.Any())
-                                this.Peripherals.AddRange(list);
+                            foreach(var per in list)
+                                this.Peripherals.Add(per);
 
                             RaisePropertyChanged(nameof(Peripherals));
                         },
