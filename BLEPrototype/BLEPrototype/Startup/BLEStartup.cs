@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using BLEPrototype.Delegates;
 using Prism.Ioc;
-using PotentialX.Data.Infrastructure;
+//using PotentialX.Data.Infrastructure;
 
 namespace BLEPrototype.Startup
 {
@@ -17,7 +17,7 @@ namespace BLEPrototype.Startup
         public override void ConfigureServices(IServiceCollection services)
         {
             services.UseBleCentral<BleCentralDelegate>();
-            services.RegisterModule<DataModule>();
+            //services.RegisterModule<DataModule>();
         }
 
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)

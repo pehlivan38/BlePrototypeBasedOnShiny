@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\PotentialX\Core\PotentialX.Data\PotentialX.Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Update="AboutPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
